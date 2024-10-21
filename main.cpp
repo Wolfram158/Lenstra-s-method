@@ -5,6 +5,7 @@
 #include <set>
 // #include <functional>
 #include <string>
+#include <algorithm>
 #include <thread> 
 
 void solve(
@@ -104,6 +105,11 @@ void add_examples(std::vector<mpz_class>& examples) {
     examples.push_back(mpz_class("1515151515151515151515151515151515151515151515"));
     examples.push_back(mpz_class("316343013244102577022636990019897602752593577"));
     examples.push_back(mpz_class("31634331111111111111111111111111111"));
+    examples.push_back(mpz_class("141313511251251251251251522111123411114212211112221"));
+    examples.push_back(mpz_class("14131351125125125125125152211112341111421221111222121"));
+    examples.push_back(mpz_class("141313511251251251251251522111123411114212211112221211111111"));
+    examples.push_back(mpz_class("141313511251251253222222222222000000222211111111111111111111"));
+    std::sort(examples.begin(), examples.end());
 }
 
 int main(int argc, char* argv[]) {
@@ -112,8 +118,6 @@ int main(int argc, char* argv[]) {
     int B = 200000;
     mpz_class C = mpz_class(10000000);
     mpz_class n = mpz_class("235928351012000155533311111133333333");
-    std::vector<mpz_class> examples;
-    add_examples(examples);
     bool fully = false;
     bool example = false;
     for (int i = 1; i < argc; i++) {
@@ -157,6 +161,8 @@ int main(int argc, char* argv[]) {
         }
     }
     if (example) {
+        std::vector<mpz_class> examples;
+        add_examples(examples);
         while (true) {
             std::cout << "Choose one of the following examples:\n";
             for (std::vector<mpz_class>::size_type i = 1; i < examples.size() + 1; i++) {
@@ -179,7 +185,7 @@ int main(int argc, char* argv[]) {
         }
         return 0;
     }
-    std::multiset<mpz_class> prs = factor_fully(ecm, 16, C, B, n);
+    std::multiset<mpz_class> prs = factor_fully(ecm, n_threads, C, B, n);
     mpz_class pr = *prs.begin();
     int deg = 0;
     bool need = false;

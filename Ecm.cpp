@@ -166,6 +166,18 @@ void Lenstra_ECM::factor(mpz_class& n, int B, mpz_class& C) {
         mpz_class a = rr.get_z_range(n);
         mpz_class u = rr.get_z_range(n);
         mpz_class v = rr.get_z_range(n);
+        mpz_class b = (v * v - u * u * u - a * u) % n;
+        normalize(b, n);
+        mpz_class D = (4 * a * a * a + 27 * b * b) % n;
+        std::tuple<mpz_class, mpz_class, mpz_class> gcds = extended_euclid(D, n);
+        mpz_class gcd = std::get<0>(gcds);
+        if (gcd > 1 && gcd < n) {
+            result = gcd;
+            complete = true;
+            break;
+        } else if (gcd == n) {
+            continue;
+        }
         Point point = Point(u, v);
         if (try_ecm(n, a, B, C, point)) {
             complete = true;
